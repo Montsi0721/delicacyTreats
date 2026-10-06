@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Delicacy Treats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--sky:#071229;--glass:#9ADBCB;--pearl:#F3EFE8;--paper:#E9EEF0;--ink:#0A1B33;--mute:#4B5B70;
+--serif:'Instrument Serif',Georgia,serif;--sans:'Hanken Grotesk',system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0E2038;--ink:#F3EFE8;--mute:#9DB0C4}}
+:root[data-theme="dark"]{--paper:#0E2038;--ink:#F3EFE8;--mute:#9DB0C4}
+html{background:var(--sky);scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--paper);color:var(--ink);font:400 1.05rem/1.6 var(--sans)}
+:focus-visible{outline:3px solid var(--glass);outline-offset:3px}
+.hero{position:relative;height:100svh;min-height:34rem;background:var(--sky);color:var(--pearl);overflow:hidden}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero div{position:absolute;left:0;right:0;bottom:0;padding:0 1.2rem 9svh;text-align:center;animation:in 2.4s .6s ease both}
+h1{font:400 clamp(3.6rem,15vw,12rem)/.9 var(--serif);letter-spacing:-.02em}
+.hero p{margin:1.1rem auto 1.8rem;max-width:26rem;font-size:1.1rem;opacity:.9}
+.btn{display:inline-block;font:600 .95rem var(--sans);padding:.95rem 1.8rem;border-radius:999px;border:0;background:var(--glass);color:var(--sky);text-decoration:none;cursor:pointer}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.wrap{max-width:62rem;margin:0 auto;padding:clamp(4rem,12vh,8rem) 1.4rem}
+h2{font:400 clamp(2.4rem,6vw,4rem)/1 var(--serif);margin-bottom:3rem}
+.grid{display:grid;grid-template-columns:1fr minmax(15rem,25rem);gap:3rem;align-items:start}
+.cat{padding:1.6rem 0;border-top:1px solid color-mix(in srgb,var(--ink) 22%,transparent)}
+.cat h3{font:400 1.8rem var(--serif);margin-bottom:.8rem}
+.item{display:block;width:100%;text-align:left;background:none;border:0;color:inherit;font:inherit;padding:.55rem .7rem;margin:0 -.7rem .4rem;border-radius:.6rem;cursor:pointer;transition:background .25s}
+.item.on{background:color-mix(in srgb,var(--ink) 9%,transparent)}
+.r{display:flex;justify-content:space-between;gap:1rem;font-weight:500}
+.item p{color:var(--mute)}
+.stage{position:sticky;top:6rem;aspect-ratio:1;border-radius:50%;background:var(--sky);overflow:hidden}
+.plate{position:absolute;inset:9%;animation:float 7s ease-in-out infinite}
+.dish{display:block;width:100%;height:100%;animation:drop 1s cubic-bezier(.2,.9,.2,1) both}
+.dish img{width:100%;height:100%;object-fit:cover;border-radius:50%;animation:spin 90s linear infinite;filter:drop-shadow(0 14px 14px rgba(0,0,0,.5))}
+.dish svg{width:100%;height:100%;filter:drop-shadow(0 14px 14px rgba(0,0,0,.5));animation:spin 90s linear infinite}
+.steam i{display:none;position:absolute;left:calc(50% + var(--x));bottom:50%;width:1.8rem;height:5rem;margin-left:-.9rem;border-radius:50%;background:rgba(255,255,255,.4);filter:blur(14px);opacity:0;animation:steam 3.4s ease-in infinite var(--d)}
+[data-hot="1"] .steam i{display:block}
+.bgpic{position:absolute;inset:0;z-index:0;overflow:hidden}
+#menu{position:relative}
+#menu .wrap{position:relative;z-index:1}
+.bgpic div{position:absolute;inset:-14%;background-size:cover;background-position:center;filter:blur(34px) saturate(1.3);animation:fade 1.2s both}
+.bgpic::after{content:"";position:absolute;inset:0;background:var(--paper);opacity:.8}
+@keyframes fade{from{opacity:0}}
+@keyframes float{50%{transform:translateY(-8px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drop{from{opacity:0;transform:translateY(-36px) scale(.86) rotate(-28deg)}}
+@keyframes steam{0%{opacity:0;transform:translateY(0) scaleX(.8)}35%{opacity:.7}100%{opacity:0;transform:translateY(-5rem) scaleX(1.7)}}
+.reserve{background:var(--sky);color:var(--pearl)}
+.reserve .wrap{padding-top:clamp(4rem,10vh,7rem);padding-bottom:4rem}
+form{display:grid;grid-template-columns:2fr 1fr 2fr auto;gap:1rem;align-items:end;max-width:62rem}
+label{display:grid;gap:.4rem;font-weight:500;font-size:.95rem}
+input{font:inherit;color:var(--pearl);background:transparent;border:0;border-bottom:2px solid var(--glass);padding:.55rem 0;width:100%;color-scheme:dark}
+#msg{min-height:1.6rem;margin-top:1.2rem;color:var(--glass)}
+.reserve small{display:block;margin-top:3rem;opacity:.7}
+body{overflow-x:clip}
+.btn{text-align:center}
+.item{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+@media(max-width:860px){.grid{grid-template-columns:1fr;gap:1.2rem}.stage{position:relative;width:min(76vw,17rem);margin:.4rem auto 1.4rem}}
+@media(max-width:760px){form{grid-template-columns:1fr}.item{padding:.85rem .7rem}.hero p{font-size:1rem;margin:.9rem auto 1.4rem}.cat{padding:1.3rem 0}}
+@media(max-height:520px){.hero{min-height:26rem}h1{font-size:3rem}.hero p{display:none}.hero div{padding-bottom:5svh}}
+@media(prefers-reduced-motion:reduce){.hero div,.plate,.dish,.dish svg,.dish img,.bgpic div{animation:none}.steam{display:none}}
+</style>
+</head>
+<body>
+<section class="hero" aria-label="Delicacy Treats">
+  <canvas id="c" aria-hidden="true"></canvas>
+  <div>
+    <h1>Delicacy Treats</h1>
+    <p>Seafood from this morning's catch, cooked over fire and salt.</p>
+    <a class="btn" href="#reserve">Reserve a table</a>
+  </div>
+</section>
+
+<section id="menu"><div class="bgpic" id="bgpic" aria-hidden="true"></div><div class="wrap">
+  <h2>The menu</h2>
+  <div class="grid"><div id="list"></div><div class="stage" id="stage" data-hot="0"><div class="plate" id="plate"></div><div class="steam" aria-hidden="true"><i style="--x:-2.2rem;--d:0s"></i><i style="--x:0rem;--d:1.1s"></i><i style="--x:2.2rem;--d:2.2s"></i></div></div></div>
+</div></section>
+
+<section class="reserve" id="reserve"><div class="wrap">
+  <h2>Reserve a table</h2>
+  <form id="f">
+    <label>Name<input name="n" required autocomplete="name"></label>
+    <label>Guests<input name="g" type="number" min="1" max="12" value="2" required></label>
+    <label>Date and time<input name="w" type="datetime-local" required></label>
+    <button class="btn" type="submit">Request table</button>
+  </form>
+  <p id="msg" role="status" aria-live="polite"></p>
+  <small>Open Tuesday to Sunday, 12:00 to 22:00. Closed Monday.</small>
+</div></section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const HOT=new Set(['prawns','octopus','paella','bream']);
+const MENU={
+ 'Raw bar':[['Oysters on ice, half dozen','Cold and briny, with lemon and pink peppercorn mignonette.',320,'oyster'],['Tuna crudo','Sliced thin with lime, chili and good olive oil.',250,'tuna']],
+ 'Hot plates':[['Garlic prawns','Shell-on, in butter, garlic and parsley, with grilled bread.',340,'prawns'],['Grilled octopus','Charred over coals, with smoked paprika potatoes.',390,'octopus'],['Seafood paella','Mussels, clams, calamari and prawns over saffron rice.',580,'paella'],['Salt-baked sea bream','Whole fish in a salt crust, carved at the table.',650,'bream']],
+ 'Sweet':[['Lemon tart','Sharp curd, crisp shell, whipped cream.',160,'tart'],['Coconut panna cotta','Set soft, with grilled pineapple and lime.',160,'panna']]};
+
+/* Plates: SVG illustrations with transparent backgrounds */
+const E=(x,y,rx,ry,f,r=0)=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${f}" transform="rotate(${r} ${x} ${y})"/>`;
+const C=(x,y,r,f)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}"/>`;
+const ring=(n,rad,fn,o=0)=>Array.from({length:n},(_,i)=>{const a=o+i*360/n,t=a*Math.PI/180;return fn(+(100+Math.cos(t)*rad).toFixed(1),+(100+Math.sin(t)*rad).toFixed(1),a,i)}).join('');
+const disc=b=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><radialGradient id="rm" cx=".4" cy=".35" r=".8"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#cfd8dc"/></radialGradient><linearGradient id="fs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d3dde2"/><stop offset="1" stop-color="#8ea0aa"/></linearGradient></defs><circle cx="100" cy="100" r="96" fill="url(#rm)"/><circle cx="100" cy="100" r="74" fill="#f7f9f8" stroke="#dde4e6" stroke-width="2"/>${b}</svg>`;
+const tent=a=>`<path d="M100 100C122 76 152 88 150 56" stroke="#b5526d" stroke-width="11" fill="none" stroke-linecap="round" transform="rotate(${a} 100 100)"/><path d="M100 100C122 76 152 88 150 56" stroke="#d98aa0" stroke-width="3" fill="none" stroke-linecap="round" transform="rotate(${a} 100 100)"/>`;
+const P={
+ oyster:()=>disc(C(100,100,64,'#d3eaf3')+ring(14,50,(x,y,a)=>`<rect x="${x-7}" y="${y-7}" width="14" height="14" rx="3" fill="#eef8fb" transform="rotate(${a*2} ${x} ${y})"/>`)+ring(6,34,(x,y,a)=>E(x,y,16,10,'#a79f92',a)+E(x,y,12,6.5,'#e9efe8',a)+E(x,y,4,2.5,'#fff',a))+E(100,100,11,8,'#f4d44a')+E(100,100,6,3.5,'#fbe98a')),
+ tuna:()=>disc(ring(7,32,(x,y,a)=>E(x,y,17,8,'#c2364b',a+90)+E(x,y,10,2.5,'#e5798a',a+90))+ring(5,54,(x,y)=>C(x,y,7.5,'#e9f2c4')+C(x,y,5.5,'#9bc34a'),18)+ring(10,20,(x,y)=>C(x,y,2,'#e5382e'))+C(100,100,6,'#fff')),
+ prawns:()=>disc(E(100,100,40,30,'#d9a65f',-20)+E(100,100,34,24,'#ecc283',-20)+ring(6,34,(x,y,a)=>E(x,y,20,8,'#f08a5d',a+70)+E(x,y,20,2,'#d96a3e',a+70))+ring(16,56,(x,y)=>C(x,y,2.5,'#3f8f4a'),7)),
+ octopus:()=>disc([0,72,144,216,288].map(tent).join('')+ring(5,60,(x,y)=>C(x,y,6,'#e6bf6a'),-5)+C(100,100,12,'#8e3d55')),
+ paella:()=>disc(C(100,100,64,'#e5b53a')+ring(28,40,(x,y,a,i)=>E(x,y,3.5,1.6,'#f6dc7c',a+i*20))+ring(36,56,(x,y,a,i)=>E(x,y,3.5,1.6,'#f6dc7c',a+i*20))+ring(6,42,(x,y,a)=>E(x,y,14,8.5,'#1f2b44',a)+E(x,y,9,4.5,'#e8a35a',a),10)+ring(5,18,(x,y,a)=>E(x,y,13,5.5,'#ee7b4d',a+60))+ring(8,32,(x,y)=>C(x,y,3,'#5fa84a'),22)),
+ bream:()=>disc('<polygon points="132,100 164,80 164,120" fill="#aab8c0"/>'+E(92,100,46,25,'url(#fs)')+[0,1,2,3,4].map(i=>`<path d="M${72+i*11} ${82+Math.abs(i-2)*3}q8 18 0 36" stroke="#8fa0aa" stroke-width="1.6" fill="none"/>`).join('')+C(60,95,4,'#1b2430')+C(61,94,1.3,'#fff')+C(100,150,12,'#f4d44a')+C(100,150,8,'#fbe98a')+'<path d="M70 62q10-10 24-6M80 140q16 10 34 4" stroke="#3f8f4a" stroke-width="3" fill="none" stroke-linecap="round"/>'),
+ tart:()=>disc(C(100,100,42,'#d9a65f')+C(100,100,35,'#f4d44a')+C(100,100,26,'#f8e06a')+ring(6,18,(x,y)=>C(x,y,6.5,'#fffaf0'))+C(100,100,6.5,'#fffaf0')+ring(3,54,(x,y,a)=>E(x,y,10,5,'#4f9a4f',a+90),30)),
+ panna:()=>disc(ring(6,46,(x,y,a)=>`<rect x="${x-7}" y="${y-7}" width="14" height="14" rx="3" fill="#f2c230" transform="rotate(${a} ${x} ${y})"/>`)+C(100,100,34,'#fbfbf7')+E(90,88,11,6,'#fff',-35)+ring(12,40,(x,y)=>C(x,y,1.8,'#7ab648'),10)+ring(8,26,(x,y,a)=>E(x,y,5,2,'#eef0ea',a),5))};
+
+/* Paste a direct link to a transparent PNG or WebP per dish. Empty or broken links fall back to the drawn plate. */
+const IMG={
+ oyster:'https://images.unsplash.com/photo-1604909052743-94e838986d24?auto=format&fit=crop&w=800&q=85',
+ tuna:'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=85',
+ prawns:'https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=800&q=85',
+ octopus:'https://images.unsplash.com/photo-1534604973900-c43ab4c2e0ab?auto=format&fit=crop&w=800&q=85',
+ paella:'https://images.unsplash.com/photo-1534080564583-6be75777b214?auto=format&fit=crop&w=800&q=85',
+ bream:'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=85',
+ tart:'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=85',
+ panna:'https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=800&q=85'};
+const pl=document.getElementById('plate'),bgp=document.getElementById('bgpic');
+function setBg(src){const d=document.createElement('div');d.style.backgroundImage='url("'+src+'")';bgp.replaceChildren(d)}
+const flat=Object.values(MENU).flat();let n=0,cur=-1;
+list.innerHTML=Object.entries(MENU).map(([c,is])=>`<div class="cat"><h3>${c}</h3><div>`+
+ is.map(i=>`<button class="item" data-i="${n++}"><span class="r"><span>${i[0]}</span><span>M${i[2]}</span></span><p>${i[1]}</p></button>`).join('')+'</div></div>').join('');
+/* On phones the plate opens inline, right under the dish you tap, so it never covers the list */
+const mq=matchMedia('(max-width:860px)'),grid=stage.parentElement;
+function place(){const b=list.querySelector('.item.on');
+ if(mq.matches&&b){const y=b.getBoundingClientRect().top;b.after(stage);scrollBy({top:b.getBoundingClientRect().top-y,behavior:'instant'})}
+ else grid.appendChild(stage)}
+mq.addEventListener('change',place);
+function show(i){if(i===cur)return;cur=i;
+ document.querySelectorAll('.item').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));place();
+ const k=flat[i][3],drawn=()=>{pl.innerHTML=`<span class="dish">${P[k]()}</span>`;setBg('data:image/svg+xml,'+encodeURIComponent(P[k]()))};
+ if(IMG[k]){pl.innerHTML=`<span class="dish"><img src="${IMG[k]}" alt="${flat[i][0]}" referrerpolicy="no-referrer"></span>`;setBg(IMG[k]);pl.querySelector('img').onerror=drawn}else drawn();
+ stage.dataset.hot=HOT.has(flat[i][3])?1:0}
+let lock=0,raf=0;/* lock: ignore hover while the page glides an item to the centre */
+function glide(el){
+ cancelAnimationFrame(raf);
+ const r=el.getBoundingClientRect(),y0=scrollY,max=document.documentElement.scrollHeight-innerHeight,
+  y1=Math.max(0,Math.min(max,y0+r.top+r.height/2-innerHeight/2)),d=y1-y0;
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches||Math.abs(d)<2){scrollTo({top:y1,behavior:'instant'});return}
+ const dur=Math.min(1500,Math.max(800,Math.abs(d)*.6)),t0=performance.now();lock=Infinity;
+ const f=now=>{const t=Math.min(1,(now-t0)/dur),e=t*t*t*(t*(6*t-15)+10);/* smootherstep easing */
+  scrollTo({top:y0+d*e,behavior:'instant'});
+  if(t<1)raf=requestAnimationFrame(f);else{raf=0;lock=performance.now()+250}};
+ raf=requestAnimationFrame(f)}
+['wheel','touchstart','keydown'].forEach(ev=>addEventListener(ev,()=>{if(raf){cancelAnimationFrame(raf);raf=0;lock=performance.now()+250}},{passive:true}));
+['mouseover','focusin','click'].forEach(ev=>list.addEventListener(ev,e=>{
+ const b=e.target.closest('.item');if(!b||(ev==='mouseover'&&performance.now()<lock))return;
+ show(+b.dataset.i);if(ev!=='mouseover')glide(b)}));
+show(0);
+f.addEventListener('submit',e=>{e.preventDefault();const d=new FormData(f);
+ msg.textContent=`Thank you, ${d.get('n')}. Your request for ${d.get('g')} is noted.`;f.reset()});
+
+/* Dusk sea (shader) with a rising pearl */
+const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const R=new THREE.WebGLRenderer({canvas:c,antialias:true});R.setPixelRatio(Math.min(devicePixelRatio,innerWidth<760?1.25:1.75));
+const S=new THREE.Scene(),cam=new THREE.PerspectiveCamera(35,1,.1,50);cam.position.z=6;
+const U={t:{value:0},res:{value:new THREE.Vector2(1,1)},sx:{value:.5}};
+const bg=new THREE.Mesh(new THREE.PlaneGeometry(2,2),new THREE.ShaderMaterial({uniforms:U,depthTest:false,depthWrite:false,
+vertexShader:'varying vec2 v;void main(){v=uv;gl_Position=vec4(position.xy,0.,1.);}',
+fragmentShader:`varying vec2 v;uniform float t,sx;uniform vec2 res;
+float h(vec2 p){return sin(p.x)+sin(p.y*1.3+p.x*.5)+sin(p.x*.7-p.y*.9);}
+void main(){float a=res.x/res.y,hz=.46;vec2 sun=vec2(sx,hz+.06);vec3 low=vec3(.98,.74,.58),mid=vec3(.2,.3,.46),top=vec3(.03,.07,.16),col;
+ if(v.y>hz){float k=(v.y-hz)/(1.-hz);col=mix(low,mid,smoothstep(0.,.3,k));col=mix(col,top,smoothstep(.15,.85,k));
+  col+=vec3(1.,.8,.6)*.55*exp(-length((v-sun)*vec2(a,1.))*4.5);}
+ else{float d=hz-v.y,z=1./(d+.03);vec2 p=vec2((v.x-.5)*a*z*1.4,z*2.+t*.7);float w=h(p);
+  col=mix(vec3(.13,.23,.35),vec3(.02,.05,.12),smoothstep(0.,.55,d));col=mix(col,low*.85,.4*exp(-d*7.));
+  float col_s=exp(-pow((v.x-sx)*a*(1.+d*4.),2.)*7.)*exp(-d*1.6);
+  float sp=smoothstep(1.3,2.5,w)*smoothstep(0.,.1,d);
+  col+=vec3(1.,.8,.6)*(sp*1.5+.18)*col_s;}
+ col*=1.-.4*length(v-.5);gl_FragColor=vec4(col,1.);}`}));
+bg.frustumCulled=false;bg.renderOrder=-1;S.add(bg);
+const pearl=new THREE.Mesh(new THREE.SphereGeometry(.62,64,64),new THREE.ShaderMaterial({uniforms:U,
+vertexShader:'varying vec3 n,w;void main(){n=normalize(normalMatrix*normal);w=-(modelViewMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
+fragmentShader:`varying vec3 n,w;uniform float t;
+void main(){vec3 N=normalize(n),V=normalize(w),L=normalize(vec3(.35,.5,.8));float f=pow(1.-max(dot(N,V),0.),2.4);
+ vec3 base=vec3(.95,.93,.91)*(max(dot(N,L),0.)*.6+.4);
+ vec3 ir=.5+.5*cos(6.2831*(vec3(0.,.33,.67)+f*1.1+N.y*.35+t*.02));
+ vec3 col=mix(base,base*.55+ir*.6,f*.9+.12);
+ col+=pow(max(dot(reflect(-L,N),V),0.),70.)*1.3+vec3(1.,.78,.58)*pow(f,3.)*.4;
+ gl_FragColor=vec4(col,1.);}`}));
+S.add(pearl);
+let mx=0,T=0,born=performance.now();
+addEventListener('pointermove',e=>mx=e.clientX/innerWidth-.5);
+function size(){const w=c.clientWidth,h=c.clientHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();U.res.value.set(w,h)}
+addEventListener('resize',size);size();
+(function loop(){
+ if(!calm)T+=.016;U.t.value=T;
+ const k=calm?1:Math.min(1,(performance.now()-born-300)/3200),e=1-Math.pow(1-Math.max(k,0),3),fit=Math.min(1,cam.aspect*1.25);
+ U.sx.value+=((.5+mx*.12)-U.sx.value)*.05;
+ pearl.scale.setScalar((.3+.7*e)*fit);
+ pearl.position.set((U.sx.value-.5)*1.5,-.12+(.78+(cam.aspect<.8?.3:0)+Math.sin(T*1.2)*.04)*e*fit,0);
+ pearl.rotation.y=T*.2;
+ R.render(S,cam);requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
